@@ -1,0 +1,28 @@
+<!--
+ * @Author: Bin
+ * @Date: 2023-03-05
+ * @FilePath: /gpt-zmide-server/views/index.tpl
+-->
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Welcome to gpt zmide server</title>
+		<link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+	</head>
+	<body>
+		<div class="app_content">
+			<h1>Welcome to gpt-zmide-server</h1>
+			<p>
+				The server provides API services for applications, and technical support is provided by
+				<a href="https://bin.zmide.com" target="_blank">@tzmax</a>
+				.
+			</p>
+			<p style="color: #000">
+                <em>Thank you for using gpt-zmide-server.</em>
+            </p>
+		</div>
+	</body>
+	<script src="/static/js/index.js"></script>
+</html>
