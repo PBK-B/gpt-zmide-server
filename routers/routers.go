@@ -10,6 +10,7 @@ import (
 
 	"gpt-zmide-server/controllers"
 	"gpt-zmide-server/controllers/apis"
+	"gpt-zmide-server/middleware"
 )
 
 func BuildRouter(r *gin.Engine) *gin.Engine {
@@ -17,6 +18,8 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 	// gin.DisableConsoleColor()
 
 	r.GET("/", new(controllers.Index).Index)
+
+	r.GET("/admin", middleware.BasicAuth(), new(controllers.Admin).Index)
 
 	// r.GET("/test", new(controllers.InstallController).Test) // 测试路由
 
@@ -30,8 +33,8 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 			apisCtl.Fail(ctx, "404 route not found.")
 		}
 
-		api.Any("/", notDefault)
-		api.Any("/:NoRoute", notDefault)
+		api.GET("/", notDefault)
+		api.Any("/:route/*no", notDefault)
 
 		// 应用层接口
 		api.GET("/index", apisApp.Index)

@@ -6,6 +6,7 @@
 package helper
 
 import (
+	"crypto/md5"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -53,6 +54,17 @@ func init() {
 func InitConfig() *DefaultConfig {
 	c := DefaultConfig{}
 	c.AppKey = RandStr(32)
+	c.SiteName = "gpt-zmide-server"
+	c.DomainName = "https://demo.zmide.com"
+	c.Host = "0.0.0.0"
+	c.Port = 8091
+	c.AdminUser.User = "admin"
+	pwd := fmt.Sprintf("%x", md5.Sum([]byte("admin")))
+	c.AdminUser.Password = pwd
+	c.Mysql.Host = "127.0.0.1"
+	c.Mysql.Port = 3306
+	c.Mysql.User = "root"
+	c.OpenAI.Model = "gpt-3.5-turbo"
 	return &c
 }
 

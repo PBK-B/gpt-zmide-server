@@ -10,12 +10,12 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
+	"net/url"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
+	"gpt-zmide-server/helper"
 	"gpt-zmide-server/routers"
 )
 
@@ -25,32 +25,39 @@ var FSStatic embed.FS
 //go:embed views
 var FSViews embed.FS
 
-const AppName = "gpt-zmide-server"
-
 func main() {
+	// 判断是部署环境
+	if helper.IsRelease() {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.Default()
 
-	// 静态资源嵌入
-	templ := template.Must(template.New("").ParseFS(FSViews, "views/*"))
-	r.SetHTMLTemplate(templ)
-
-	// 注册路由
-	r = routers.BuildRouter(r)
-
 	// 配置静态文件路由
-	if !IsRelease() {
-		r.StaticFS("/static", http.Dir("./static")) // 前端调试模式
+	if gin.Mode() == "debug" {
+		// 前端调试模式
+		templ := template.Must(template.New("").ParseGlob("views/*"))
+		r.SetHTMLTemplate(templ)
+		r.StaticFS("/static", http.Dir("./static"))
 	} else {
+		templ := template.Must(template.New("").ParseFS(FSViews, "views/*"))
+		r.SetHTMLTemplate(templ)
 		staticDir, _ := fs.Sub(FSStatic, "static")
 		r.StaticFS("/static", http.FS(staticDir))
 	}
 
-	// Listen and Server in 0.0.0.0:8091
-	r.Run("0.0.0.0:8091")
-}
+	// 注册路由
+	r = routers.BuildRouter(r)
 
-func IsRelease() bool {
-	arg1 := strings.ToLower(os.Args[0])
-	name := filepath.Base(arg1)
-	return strings.Index(name, AppName) == 0 && strings.Index(arg1, "go-build") < 0
+	// Listen and Server in 0.0.0.0:8091
+	host := "http://0.0.0.0:8091"
+	if helper.Config.Host != "" {
+		host = "http://" + helper.Config.Host + ":" + strconv.Itoa(helper.Config.Port)
+	}
+
+	serverHost, err := url.Parse(host)
+	if err != nil {
+		serverHost = &url.URL{Host: "0.0.0.0:8091"}
+	}
+	r.Run(serverHost.Host)
 }
