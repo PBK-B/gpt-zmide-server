@@ -11,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var APIDefaultController = new(Controller)
+
 type Controller struct {
 }
 

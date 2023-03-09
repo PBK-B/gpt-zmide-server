@@ -6,8 +6,9 @@
 package models
 
 type Message struct {
-	ID     uint `gorm:"primaryKey" json:"id"`
-	ChatId uint `json:"chat_id"`
-	Data   string
+	ID      uint   `gorm:"primaryKey" json:"id"`
+	ChatId  uint   `json:"chat_id"`
+	Role    string `json:"role"`
+	Content string `json:"content"`
 	Model
 }
