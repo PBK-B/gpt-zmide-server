@@ -6,8 +6,10 @@
 package models
 
 import (
+	"gpt-zmide-server/helper"
 	"time"
 
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -24,11 +26,16 @@ func init() {
 		return
 	}
 
-	var err error
-	// DB, err = gorm.Open(sqlite.Open("database.db"), &gorm.Config{}) // 连接数据库
-	// if db, _ := DB.DB(); db != nil {
-	// 	db.SetMaxOpenConns(1)
-	// }
+	dbUrl, err := helper.Config.GetMysqlUrl()
+	if err != nil || dbUrl == nil {
+		panic("the database is not configured, please modify the app.conf file to configure the database")
+	}
+
+	dsn := helper.Config.Mysql.User + ":" + helper.Config.Mysql.Password + "@tcp(" + dbUrl.Host + ")/" + helper.Config.Mysql.Database + "?charset=utf8&parseTime=True&loc=Local"
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if db, _ := DB.DB(); db != nil {
+		db.SetMaxOpenConns(0)
+	}
 
 	if err != nil {
 		panic("failed to connect database")
@@ -37,6 +44,10 @@ func init() {
 	// Migrate the schema
 	if err == nil && DB != nil {
 		// 执行数据库迁移
-		DB.AutoMigrate()
+		DB.AutoMigrate(
+			&Application{},
+			&Chat{},
+			&Message{},
+		)
 	}
 }

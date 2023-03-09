@@ -7,9 +7,12 @@ package helper
 
 import (
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"os"
+	"strconv"
 
 	"gopkg.in/yaml.v3"
 )
@@ -33,6 +36,7 @@ type DefaultConfig struct {
 		Port     int    `yaml:"port"`
 		User     string `yaml:"user"`
 		Password string `yaml:"password"`
+		Database string `yaml:"database"`
 	}
 	OpenAI struct {
 		SecretKey     string `yaml:"secret_key"`
@@ -64,6 +68,7 @@ func InitConfig() *DefaultConfig {
 	c.Mysql.Host = "127.0.0.1"
 	c.Mysql.Port = 3306
 	c.Mysql.User = "root"
+	c.Mysql.Database = "gpt_zmide_server"
 	c.OpenAI.Model = "gpt-3.5-turbo"
 	return &c
 }
@@ -110,4 +115,16 @@ func (c *DefaultConfig) SaveConfig() error {
 		return err
 	}
 	return nil
+}
+
+// 获取数据库地址
+func (c *DefaultConfig) GetMysqlUrl() (*url.URL, error) {
+	if c.Mysql.Host == "" || c.Mysql.Port == 0 {
+		return nil, errors.New("database misconfiguration error")
+	}
+	u, err := url.Parse("http://" + c.Mysql.Host + ":" + strconv.Itoa(c.Mysql.Port))
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
 }

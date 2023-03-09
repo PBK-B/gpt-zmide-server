@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"gpt-zmide-server/helper"
+	_ "gpt-zmide-server/models"
 	"gpt-zmide-server/routers"
 )
 
