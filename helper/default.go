@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
+	"time"
 )
 
 var AppName = "server"
@@ -30,12 +31,14 @@ func IsRelease() bool {
 }
 
 // 生成随机字符串
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func RandStr(n int) string {
-	b := make([]rune, n)
+	seededRand := rand.New(
+		rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, n)
 	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b)
 }
