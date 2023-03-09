@@ -39,6 +39,7 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 		// 开放接口
 		openApis := api.Group("/open", middleware.BasicAuthOpen())
 		openApis.POST("/", apisCtlOpen.Index)
+		openApis.POST("/query", apisCtlOpen.Query)
 
 		adminApis := api.Group("/admin")
 
