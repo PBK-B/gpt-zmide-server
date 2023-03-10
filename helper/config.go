@@ -56,11 +56,13 @@ func init() {
 
 // 获取配置目录
 func getConfigPath() string {
-	appPath, err := os.Executable()
-	if err == nil {
-		appPath = filepath.Dir(appPath)
-		if appPath != "" {
-			return appPath + "/app.conf"
+	if IsRelease() {
+		appPath, err := os.Executable()
+		if err == nil {
+			appPath = filepath.Dir(appPath)
+			if appPath != "" {
+				return appPath + "/app.conf"
+			}
 		}
 	}
 	return "./app.conf"
@@ -109,7 +111,10 @@ func ReadConfig() (*DefaultConfig, error) {
 // 重新加载配置文件
 func LoadConfig(configStr string) (*DefaultConfig, error) {
 	var config = &DefaultConfig{}
-	yaml.Unmarshal([]byte(configStr), config)
+	err := yaml.Unmarshal([]byte(configStr), config)
+	if err != nil {
+		return nil, err
+	}
 	return config, nil
 }
 

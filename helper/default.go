@@ -9,10 +9,11 @@ import (
 	"math/rand"
 	"os"
 	"reflect"
+	"strings"
 	"time"
 )
 
-var AppName = "server"
+var AppName = "gpt-zmide-server"
 
 func init() {
 	type obj struct{}
@@ -21,7 +22,8 @@ func init() {
 }
 
 func IsRelease() bool {
-	return os.Getenv("DEBUG") == ""
+	arg1 := strings.ToLower(os.Args[0])
+	return (!strings.Contains(arg1, "go-build") && os.Getenv("DEBUG") == "")
 }
 
 // 生成随机字符串
