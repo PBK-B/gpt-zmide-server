@@ -8,9 +8,7 @@ package helper
 import (
 	"math/rand"
 	"os"
-	"path/filepath"
 	"reflect"
-	"strings"
 	"time"
 )
 
@@ -23,11 +21,7 @@ func init() {
 }
 
 func IsRelease() bool {
-	arg1 := strings.ToLower(os.Args[0])
-	name := filepath.Base(arg1)
-	return (strings.Index(name, AppName) == 0 &&
-		strings.Index(arg1, "go-build") < 0 &&
-		os.Getenv("DEBUG") != "")
+	return os.Getenv("DEBUG") == ""
 }
 
 // 生成随机字符串
