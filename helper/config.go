@@ -12,14 +12,13 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"gopkg.in/yaml.v3"
 )
 
 var Config *DefaultConfig
-
-const configPath = "./app.conf"
 
 type DefaultConfig struct {
 	AppKey     string `yaml:"app_key"`
@@ -55,6 +54,18 @@ func init() {
 	}
 }
 
+// 获取配置目录
+func getConfigPath() string {
+	appPath, err := os.Executable()
+	if err == nil {
+		appPath = filepath.Dir(appPath)
+		if appPath != "" {
+			return appPath + "/app.conf"
+		}
+	}
+	return "./app.conf"
+}
+
 func InitConfig() *DefaultConfig {
 	c := DefaultConfig{}
 	c.AppKey = RandStr(32)
@@ -74,10 +85,10 @@ func InitConfig() *DefaultConfig {
 }
 
 func ReadConfig() (*DefaultConfig, error) {
-	_, err := os.Stat(configPath)
+	_, err := os.Stat(getConfigPath())
 	if err == nil {
 		// 文件存在，读取配置文件
-		content, err := ioutil.ReadFile(configPath)
+		content, err := ioutil.ReadFile(getConfigPath())
 
 		if err != nil {
 			// 配置文件读取失败
@@ -105,7 +116,7 @@ func LoadConfig(configStr string) (*DefaultConfig, error) {
 // 保存配置文件
 func (c *DefaultConfig) SaveConfig() error {
 	if content, err := yaml.Marshal(c); err == nil {
-		err = ioutil.WriteFile(configPath, content, 0766)
+		err = ioutil.WriteFile(getConfigPath(), content, 0766)
 		if err != nil {
 			// 写入配置失败
 			return err
