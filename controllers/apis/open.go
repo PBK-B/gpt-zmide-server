@@ -53,11 +53,11 @@ func (ctl *Open) Query(c *gin.Context) {
 		if id, err := strconv.Atoi(p_chat_id); err == nil {
 			// 当 chat_id 合法时，去数据库查找 chat
 			chat.ID = uint(id)
-			chat.AppID = app.ID
-			if err := models.DB.First(chat).Error; err != nil {
+			if err := models.DB.First(chat).Error; err != nil || chat.AppID != app.ID {
 				ctl.Fail(c, "chat 处理异常")
 				return
 			}
+			chat.AppID = app.ID
 		}
 	}
 
