@@ -2,7 +2,7 @@
 /*
  * @Author: Bin
  * @Date: 2023-03-11
- * @FilePath: /php/src/example.php
+ * @FilePath: /gpt-zmide-server/docs/examples/php/src/example.php
  */
 
 namespace src;
@@ -44,6 +44,7 @@ class ZmideChatgpt
         $options = [
             'multipart'   => $multipart,
             'synchronous' => true,
+            'verify'      => false,
         ];
         $headers = [
             'Authorization' => 'Bearer ' . ZmideChatgpt::$token,
@@ -66,8 +67,11 @@ class ZmideChatgpt
 require 'vendor/autoload.php';
 
 try {
-    $callback        = ZmideChatgpt::query("计算机是什么？");
-    $code            = $callback['code']; // 是否请求成功 code 200 = 成功
+    $callback = ZmideChatgpt::query("计算机是什么？");
+    $code     = $callback['code']; // 是否请求成功 code 200 = 成功
+    if ($code != 200) {
+        throw new Exception("请求失败", $code, $callback);
+    }
     $message         = $callback['data']; // 消息对象
     $message_content = $message['content']; // 消息的内容
     $message_chat_id = $message['chat_id']; // 消息的会话 ID 通过该 id 可以连续对话
