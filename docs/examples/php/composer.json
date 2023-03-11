@@ -1,0 +1,20 @@
+{
+    "name": "zmide/example",
+    "type": "project",
+    "description": "zmide chatgpt example",
+    "autoload": {
+        "psr-4": {
+            "Zmide\\Example\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "PBK-B",
+            "email": "PBK-B@PBK6.cn"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0",
+        "php": "^8.0"
+    }
+}
