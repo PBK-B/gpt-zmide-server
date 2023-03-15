@@ -16,5 +16,13 @@ export default defineConfig({
                 admin: resolve(__dirname, 'views/admin.html'),
             },
         }
+    },
+    server: {
+        proxy: {
+            '/api': {
+                target: 'http://127.0.0.1:8091',
+                changeOrigin: true,
+            },
+        }
     }
 })

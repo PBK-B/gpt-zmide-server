@@ -37,7 +37,7 @@ func main() {
 	// 配置静态文件路由
 	if gin.Mode() == "debug" {
 		// 前端调试模式
-		templ := template.Must(template.New("").ParseGlob("dist/views/*"))
+		templ := template.Must(template.New("").ParseGlob("./dist/views/*"))
 		r.SetHTMLTemplate(templ)
 
 		r.StaticFS("/assets", http.Dir("./dist/assets"))
