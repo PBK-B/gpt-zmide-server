@@ -20,10 +20,10 @@ import (
 	"gpt-zmide-server/routers"
 )
 
-//go:embed static
+//go:embed dist/assets
 var FSStatic embed.FS
 
-//go:embed views
+//go:embed dist/views
 var FSViews embed.FS
 
 func main() {
@@ -37,14 +37,16 @@ func main() {
 	// 配置静态文件路由
 	if gin.Mode() == "debug" {
 		// 前端调试模式
-		templ := template.Must(template.New("").ParseGlob("views/*"))
+		templ := template.Must(template.New("").ParseGlob("dist/views/*"))
 		r.SetHTMLTemplate(templ)
-		r.StaticFS("/static", http.Dir("./static"))
+
+		r.StaticFS("/assets", http.Dir("./dist/assets"))
 	} else {
-		templ := template.Must(template.New("").ParseFS(FSViews, "views/*"))
+		templ := template.Must(template.New("").ParseFS(FSViews, "dist/views/*"))
 		r.SetHTMLTemplate(templ)
-		staticDir, _ := fs.Sub(FSStatic, "static")
-		r.StaticFS("/static", http.FS(staticDir))
+
+		staticDir, _ := fs.Sub(FSStatic, "dist/assets")
+		r.StaticFS("/assets", http.FS(staticDir))
 	}
 
 	// 注册路由

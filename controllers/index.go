@@ -15,5 +15,5 @@ type Index struct {
 }
 
 func (ctl *Index) Index(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tpl", nil)
+	c.HTML(http.StatusOK, "index.html", nil)
 }

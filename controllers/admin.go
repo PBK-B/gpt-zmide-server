@@ -15,5 +15,5 @@ type Admin struct {
 }
 
 func (ctl *Admin) Index(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin.tpl", nil)
+	c.HTML(http.StatusOK, "admin.html", nil)
 }
