@@ -3,6 +3,8 @@ module gpt-zmide-server
 go 1.19
 
 require (
+	github.com/PuerkitoBio/goquery v1.8.1 // indirect
+	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/beego/bee/v2 v2.0.4 // indirect
 	github.com/beego/beego/v2 v2.0.7 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
