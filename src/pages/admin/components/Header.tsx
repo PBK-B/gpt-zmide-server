@@ -27,7 +27,9 @@ export default function Header(props: HeaderProps) {
                         droplist={
                             <Menu>
                                 <Menu.Item key='1'>修改密码</Menu.Item>
-                                <Menu.Item key='2'>退出登录</Menu.Item>
+                                <Menu.Item key='2' onClick={() => {
+                                    window.location.replace("/admin/signout")
+                                }}>退出登录</Menu.Item>
                             </Menu>
                         }
                     >

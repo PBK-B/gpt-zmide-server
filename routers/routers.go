@@ -20,6 +20,7 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 	r.GET("/", new(controllers.Index).Index)
 
 	r.GET("/admin", middleware.BasicAuth(), new(controllers.Admin).Index)
+	r.GET("/admin/signout", new(controllers.Admin).SignOut)
 
 	// r.GET("/test", new(controllers.InstallController).Test) // 测试路由
 
