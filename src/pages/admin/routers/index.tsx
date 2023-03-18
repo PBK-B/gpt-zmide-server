@@ -12,21 +12,21 @@ function Index() {
             {routes.map((item: any, indexKey: number) => {
                 if (item?.childs) {
                     return (
-                        <Route key={indexKey} path={item.path} element={item.component}>
+                        <Route key={indexKey} path={item.path} element={item.Component}>
                             {item?.childs.map((childItem: any, childIndexKey: number) => {
                                 return (
                                     <Route
                                         key={'childs_' + childIndexKey}
                                         path={item.path + childItem.path}
                                         index={childItem?.index}
-                                        element={childItem.component}
+                                        element={childItem.Component}
                                     />
                                 );
                             })}
                         </Route>
                     );
                 }
-                return <Route key={indexKey} path={item.path} element={item.component} />;
+                return <Route key={indexKey} path={item.path} element={item.Component} />;
             })}
         </Routes>
     );

@@ -3,16 +3,25 @@
  * @Date: 2023-03-18
  * @FilePath: /gpt-zmide-server/src/pages/admin/routers/routes.ts
  */
+import { BrowserRouterProps } from 'react-router-dom';
 import { HomeScreen, ApplicationScreen } from '../screens'
 
-const routes = [
+export interface IRouter {
+    path: string;
+    redirect?: string;
+    Component?: JSX.Element | React.FC<BrowserRouterProps> | (() => any);
+    isFullPage?: boolean;
+    children?: IRouter[];
+}
+
+const routes: IRouter[] = [
     {
         path: "/",
-        component: HomeScreen,
+        Component: HomeScreen,
     },
     {
         path: "/app",
-        component: ApplicationScreen,
+        Component: ApplicationScreen,
     }
 ];
 
