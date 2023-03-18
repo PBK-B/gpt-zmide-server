@@ -65,7 +65,7 @@ func newScriptDevNode() html.Node {
 	scriptDev.AppendChild(&html.Node{
 		Type: html.TextNode,
 		Data: `
-		import RefreshRuntime from 'http://localhost:5173/@react-refresh'
+		import RefreshRuntime from '/@react-refresh'
 		RefreshRuntime.injectIntoGlobalHook(window)
 		window.$RefreshReg$ = () => {}
 		window.$RefreshSig$ = () => (type) => type
@@ -100,7 +100,7 @@ func main() {
 
 				templItem := template.Must(templ.Parse(renderNode(document.AddBack().Get(0))))
 				// templ := template.Must(template.New(templ.Tree.Root.String()).Parse())
-				fmt.Println("解析 " + templItem.Name())
+				fmt.Println("解析 " + item.Name())
 				templ.AddParseTree(item.Name(), templItem.Tree)
 			}
 		}
