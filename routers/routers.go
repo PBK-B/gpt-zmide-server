@@ -48,9 +48,11 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 		// 系统配置
 		adminConfig := adminApis.Group("/config")
 		adminConfig.POST("/update/password", apisCtlConfig.UpdatePassword)
+		adminConfig.GET("/system/info", apisCtlConfig.SystemInfo)
+		adminConfig.GET("/ping/openai", apisCtlConfig.PingOpenAI)
 
 		// 后台管理应用接口
-		adminApp := adminApis.Group("/application", middleware.BasicAuthAdmin())
+		adminApp := adminApis.Group("/application")
 		adminApp.GET("/", apisCtlApp.Index)
 		adminApp.POST("/create", apisCtlApp.Create)
 		adminApp.POST("/:id/update", apisCtlApp.Update)

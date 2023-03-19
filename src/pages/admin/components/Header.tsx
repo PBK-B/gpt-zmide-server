@@ -4,7 +4,7 @@
  * @FilePath: /gpt-zmide-server/src/pages/admin/components/Header.tsx
  */
 import React from 'react'
-import { Avatar, Divider, Layout, Menu, Dropdown, Modal, Input, Form, Message } from '@arco-design/web-react';
+import { Avatar, Divider, Layout, Menu, Popover, Modal, Input, Form, Message } from '@arco-design/web-react';
 import { IconUser } from '@arco-design/web-react/icon';
 import { axios } from '@/apis';
 
@@ -71,7 +71,7 @@ export default function Header(props: HeaderProps) {
     }
 
     return (
-        <div>
+        <div className='app_header'>
             <LayoutHeader style={{
                 height: 55,
                 display: 'flex',
@@ -79,9 +79,12 @@ export default function Header(props: HeaderProps) {
             }}>
                 <div style={{ flex: 1 }} />
                 <div style={{ height: '100%', marginRight: 15, display: 'flex', alignItems: 'center' }}>
-                    <Dropdown
+                    <Popover
                         position="br"
-                        droplist={
+                        trigger="click"
+                        className="app_header_popover"
+                        style={{ padding: 0 }}
+                        content={
                             <Menu>
                                 <Menu.Item key='1' onClick={() => {
                                     setUpdatePasswordConfig({
@@ -96,11 +99,11 @@ export default function Header(props: HeaderProps) {
                                 }}>退出登录</Menu.Item>
                             </Menu>
                         }
-                    >
-                        <Avatar size={35} style={{ backgroundColor: '#3370ff' }}>
+                    > <Avatar size={35} style={{ backgroundColor: '#3370ff' }}>
                             <IconUser />
                         </Avatar>
-                    </Dropdown>
+
+                    </Popover>
                 </div>
             </LayoutHeader>
             <Divider style={{ margin: 0 }} />

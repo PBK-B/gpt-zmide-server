@@ -4,6 +4,23 @@
 
 .layout-collapse {
     height: 100%;
+
+    .home_container {
+        .arco-card-body {
+            
+        }
+    }
+}
+
+.app_header_popover {
+    .arco-popover-content {
+        padding: 4;
+        padding-bottom: 0;
+
+        .arco-menu-inner {
+            padding: 0;
+        }
+    }
 }
 
 .arco-layout-sider-children {
