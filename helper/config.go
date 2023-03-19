@@ -70,7 +70,7 @@ func getConfigPath() string {
 
 func InitConfig() *DefaultConfig {
 	c := DefaultConfig{}
-	c.AppKey = RandStr(32)
+	c.AppKey = RandomStr(32)
 	c.SiteName = "gpt-zmide-server"
 	c.DomainName = "https://demo.zmide.com"
 	c.Host = "0.0.0.0"

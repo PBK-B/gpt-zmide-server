@@ -29,6 +29,7 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 
 		apisCtlApp := new(apis.Application)
 		apisCtlOpen := new(apis.Open)
+		apisCtlConfig := new(apis.Config)
 
 		notDefault := func(ctx *gin.Context) {
 			apis.APIDefaultController.Fail(ctx, "404 route not found.")
@@ -44,8 +45,12 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 
 		adminApis := api.Group("/admin", middleware.BasicAuthAdmin())
 
+		// 系统配置
+		adminConfig := adminApis.Group("/config")
+		adminConfig.POST("/update/password", apisCtlConfig.UpdatePassword)
+
 		// 后台管理应用接口
-		adminApp := adminApis.Group("/application")
+		adminApp := adminApis.Group("/application", middleware.BasicAuthAdmin())
 		adminApp.GET("/", apisCtlApp.Index)
 		adminApp.POST("/create", apisCtlApp.Create)
 		adminApp.POST("/:id/update", apisCtlApp.Update)

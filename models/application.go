@@ -35,7 +35,7 @@ func CreateApplication(name string) (app *Application, err error) {
 		return
 	}
 
-	key := helper.RandStr(32)
+	key := helper.RandomStr(32)
 	app.AppSecret = uuid.NewString()
 	app.AppKey = key
 	app.Status = 1

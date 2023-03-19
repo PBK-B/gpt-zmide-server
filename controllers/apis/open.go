@@ -32,7 +32,7 @@ func (ctl *Open) Query(c *gin.Context) {
 
 	var app *models.Application
 	var ok bool
-	if app, ok = appTmp.(*models.Application); !ok || app != nil || app.Status != 1 {
+	if app, ok = appTmp.(*models.Application); !ok || app == nil || app.Status != 1 {
 		ctl.Fail(c, "应用异常")
 		return
 	}

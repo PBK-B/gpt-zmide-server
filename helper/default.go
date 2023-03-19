@@ -29,7 +29,7 @@ func IsRelease() bool {
 // 生成随机字符串
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-func RandStr(n int) string {
+func RandomStr(n int) string {
 	seededRand := rand.New(
 		rand.NewSource(time.Now().UnixNano()))
 	b := make([]byte, n)
