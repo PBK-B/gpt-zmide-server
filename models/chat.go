@@ -40,13 +40,28 @@ func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 	}
 
 	// 处理会话数据
-	var msgs = []*MsgTmp{}
-	for _, item := range chat.Messages {
-		msgs = append(msgs, &MsgTmp{
+	var msgsTmp = []*MsgTmp{}
+	msgCount := 0
+	// 倒序遍历消息记录
+	for i := len(chat.Messages) - 1; i >= 0; i-- {
+		item := chat.Messages[i]
+		contextCount := msgCount + len(item.Content)
+		if contextCount > 4500 {
+			// 避免消息上下文超过 4600 字数限制
+			continue
+		}
+		msgCount = contextCount
+		msgsTmp = append(msgsTmp, &MsgTmp{
 			Role:    item.Role,
 			Content: item.Content,
 		})
 	}
+	// 修正消息顺序
+	var msgs = []*MsgTmp{}
+	for i := len(msgsTmp) - 1; i >= 0; i-- {
+		msgs = append(msgsTmp, msgsTmp[i])
+	}
+
 	msgsStr, err := json.Marshal(msgs)
 	if err != nil {
 		return nil, err
@@ -74,7 +89,7 @@ func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 		return nil, err
 	}
 
-	// fmt.Println("数据" + resp.String())
+	fmt.Println("数据" + resp.String())
 
 	type Choice struct {
 		Message struct {
