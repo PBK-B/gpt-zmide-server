@@ -70,7 +70,7 @@ func (ctl *Config) SystemInfo(c *gin.Context) {
 		assistantMessageWordCount = assistantMessageWordCount + len(item.Content)
 	}
 
-	estimatedCost := float64(assistantMessageWordCount) / 1000 * 0.06
+	estimatedCost := float64(assistantMessageWordCount) / 1000 * 0.002
 
 	ctl.Success(c, gin.H{
 		"app_count":      applicationCount,
