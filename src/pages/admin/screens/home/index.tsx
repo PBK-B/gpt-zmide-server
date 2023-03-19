@@ -4,9 +4,8 @@
  * @FilePath: /gpt-zmide-server/src/pages/admin/screens/home/index.tsx
  */
 import React from 'react'
-import { Statistic, Grid, Card, Badge } from '@arco-design/web-react';
+import { Statistic, Grid, Card, Badge, Spin } from '@arco-design/web-react';
 import { IconArrowRise } from '@arco-design/web-react/icon';
-import { axios } from '@/apis';
 import useAxios from 'axios-hooks';
 
 const Row = Grid.Row;
@@ -72,9 +71,9 @@ export default function index() {
                 <Col span={4} style={{ display: 'flex' }}>
                     <Card style={{ flex: 1 }}>
                         <p style={{ marginBottom: 8 }}>OpenAI 服务状态</p>
-                        <Badge count={1} dot offset={[8, 8]} color={pingData?.data.status ? 'green' : 'red'}>
+                        <Badge count={1} dot offset={[12, 10]} color={pingData?.data.status ? 'green' : 'red'}>
                             <span style={{ lineHeight: 1.9, fontSize: 22, fontWeight: 500, color: '#000' }}>
-                                {pingData?.data.status ? '连接正常' : '连接失败'}
+                                {pingLoading ? '连接中…' : (pingData?.data.status ? '连接正常' : '连接失败')}
                             </span>
                         </Badge>
                     </Card>

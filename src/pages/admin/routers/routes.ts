@@ -4,7 +4,7 @@
  * @FilePath: /gpt-zmide-server/src/pages/admin/routers/routes.ts
  */
 import { BrowserRouterProps } from 'react-router-dom';
-import { HomeScreen, ApplicationScreen } from '../screens'
+import { HomeScreen, ApplicationScreen, EmptyStateScreen } from '../screens'
 
 export interface IRouter {
     path: string;
@@ -22,6 +22,10 @@ const routes: IRouter[] = [
     {
         path: "/app",
         Component: ApplicationScreen,
+    },
+    {
+        path: "*",
+        Component: EmptyStateScreen,
     }
 ];
 

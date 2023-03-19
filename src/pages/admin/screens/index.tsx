@@ -5,8 +5,10 @@
  */
 import Home from './home'
 import Application from './application'
+import EmptyState from './empty'
 
 const HomeScreen = <Home />
 const ApplicationScreen = <Application />
+const EmptyStateScreen = <EmptyState />
 
-export { HomeScreen, ApplicationScreen }
+export { HomeScreen, ApplicationScreen, EmptyStateScreen }
