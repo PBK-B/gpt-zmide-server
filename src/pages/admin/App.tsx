@@ -68,6 +68,7 @@ function App() {
                             display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center', color: '#333', textDecoration: 'none'
                         }}
                             href="https://github.com/PBK-B/gpt-zmide-server"
+                            target="_blank"
                         >
                             <IconGithub fontSize={16} /><span style={{ fontWeight: 300, fontSize: 13, marginLeft: 6 }}>开源地址</span>
                         </a>

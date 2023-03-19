@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import {resolve} from 'path'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,6 +15,11 @@ export default defineConfig({
                 index: resolve(__dirname, 'views/index.html'),
                 admin: resolve(__dirname, 'views/admin.html'),
             },
+        }
+    },
+    resolve: {
+        alias: {
+            "@": resolve(__dirname, "src")
         }
     },
     server: {
