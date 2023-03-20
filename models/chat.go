@@ -89,7 +89,7 @@ func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 		return nil, err
 	}
 
-	fmt.Println("数据" + resp.String())
+	// fmt.Println("数据" + resp.String())
 
 	type Choice struct {
 		Message struct {

@@ -13,11 +13,39 @@
 
 2. 启动服务 `go run .`
 
-3. 访问 `http://127.0.0.1:8091`
+3. 修改 `app.conf` 配置文件，重启服务
+    ```
+    site_name: 站点名称
+    domain_name: https://demo.zmide.com
+    host: 0.0.0.0
+    port: 8091
+    admin_user:
+        user: admin
+        password: 
+    mysql:
+        host: localhost
+        port: 3306
+        user: root
+        password:
+        database:
+    openai:
+        secret_key:
+        model: gpt-3.5-turbo
+        http_proxy_host:
+        http_proxy_port:
+    ```
+
+4. 访问 `http://127.0.0.1:8091/admin`
 
 ## 文档 📜
 
 API 文档请参考: [docs/README.md](/docs/README.md)
+
+## 截图 🔦
+
+<img src="docs/images/screenshot_1001.png" width="560">
+
+<img src="docs/images/screenshot_1002.png" width="560">
 
 ## 谁在使用
 
