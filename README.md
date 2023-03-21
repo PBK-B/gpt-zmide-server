@@ -23,9 +23,25 @@ API 文档请参考: [docs/README.md](/docs/README.md)
 
 ## 截图 🔦
 
-<img src="docs/images/screenshot_1001.png" width="560">
+<img src="docs/images/screenshot_1003.png" width="760">
 
-<img src="docs/images/screenshot_1002.png" width="560">
+<img src="docs/images/screenshot_1001.png" width="760">
+
+<img src="docs/images/screenshot_1002.png" width="760">
+
+## 计划
+
+- [x] 安装引导页面
+
+- [ ] 后台会话查询
+
+- [ ] 后台系统设置
+
+- [ ] 敏感词过滤设置
+
+- [ ] 应用请求限速设置
+
+- [ ] 应用单独配置模型
 
 ## 开发 🔨
 
