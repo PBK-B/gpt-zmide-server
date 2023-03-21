@@ -1,0 +1,38 @@
+* {
+    margin: 0;
+}
+
+.layout_install {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .arco-divider {
+        margin: 0;
+    }
+
+    .step_container {
+        max-width: 780px;
+        margin: 0 auto;
+    }
+}
+
+.arco-steps-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.arco-result-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .arco-result-icon-tip {
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+    }
+}
