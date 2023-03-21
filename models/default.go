@@ -7,6 +7,7 @@ package models
 
 import (
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"gpt-zmide-server/helper"
 	"strings"
@@ -24,14 +25,22 @@ type Model struct {
 }
 
 func init() {
+	// 是否初始化安装
+	if !helper.IsInitialize() {
+		if err := InitDB(); err != nil {
+			panic(err.Error())
+		}
+	}
+}
 
+func InitDB() error {
 	if DB != nil {
-		return
+		return nil
 	}
 
 	dbUrl, err := helper.Config.GetMysqlUrl()
 	if err != nil || dbUrl == nil {
-		panic("the database is not configured, please modify the app.conf file to configure the database")
+		return errors.New("the database is not configured, please modify the app.conf file to configure the database")
 	}
 
 	dsn := helper.Config.Mysql.User + ":" + helper.Config.Mysql.Password + "@tcp(" + dbUrl.Host + ")/" + helper.Config.Mysql.Database + "?charset=utf8&parseTime=True&loc=Local"
@@ -41,18 +50,25 @@ func init() {
 	}
 
 	if err != nil {
-		panic("failed to connect database")
+		return errors.New("failed to connect database")
 	}
 
 	// Migrate the schema
 	if err == nil && DB != nil {
 		// 执行数据库迁移
-		DB.AutoMigrate(
+		err = DB.AutoMigrate(
 			&Application{},
 			&Chat{},
 			&Message{},
 		)
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
 	}
+
+	return nil
 }
 
 type LocalTime struct {

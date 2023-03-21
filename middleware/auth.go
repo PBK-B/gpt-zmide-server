@@ -36,6 +36,13 @@ func searchCredential(authValue string) (string, bool) {
 func BasicAuth() gin.HandlerFunc {
 	realm := "Basic realm=" + strconv.Quote("Authorization Required")
 	return func(c *gin.Context) {
+
+		// 判断程序未初始化，跳转安装部署页面
+		if helper.IsInitialize() {
+			c.Redirect(http.StatusTemporaryRedirect, "/install")
+			return
+		}
+
 		// Search user in the slice of allowed credentials
 		user, found := searchCredential(c.Request.Header.Get("Authorization"))
 		if !found {

@@ -140,10 +140,11 @@ export default function App() {
             title: "配置 OpenAI",
             view: (props: StepViewProps) => {
                 const { fromData, setFromData = () => { }, onStepPrevious = () => { }, onStepNext = () => { } } = props;
-                const forms: { label: string, field: string, example?: string }[] = [
+                const forms: { label: string, field: string, example?: string, required?: boolean }[] = [
                     {
                         label: 'OpenAI Secret Key',
-                        field: 'openai_secret_key'
+                        field: 'openai_secret_key',
+                        required: true
                     },
                     {
                         label: 'HTTP 代理地址',
@@ -159,7 +160,7 @@ export default function App() {
                 return fromData && <Form autoComplete='off' layout="vertical" >
                     {
                         forms.map((item, index) =>
-                            <Form.Item key={`${item.field}_form_item_${index}`} label={item.label}>
+                            <Form.Item key={`${item.field}_form_item_${index}`} label={item.label} rules={[item.required ? { required: true } : {}]}>
                                 <Input
                                     defaultValue={fromData[item.field]}
                                     placeholder={`请输入你的${item.label}${item.example ? ' ，例如: ' + item.example : ''}`}
@@ -289,13 +290,13 @@ export default function App() {
                 return
             }
 
-            for (const key in Object.values(fromData)) {
-                if (!Object.values(fromData)[key]) {
-                    Message.clear()
-                    Message.warning("部分数据未填写完整")
-                    return
-                }
-            }
+            // for (const key in Object.values(fromData)) {
+            //     if (!Object.values(fromData)[key]) {
+            //         Message.clear()
+            //         Message.warning("部分数据未填写完整")
+            //         return
+            //     }
+            // }
 
             const dataStr = JSON.stringify(fromData)
             switch (index) {

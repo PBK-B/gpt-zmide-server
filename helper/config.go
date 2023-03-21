@@ -7,6 +7,7 @@ package helper
 
 import (
 	"crypto/md5"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -14,7 +15,9 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
+	"github.com/go-resty/resty/v2"
 	"gopkg.in/yaml.v3"
 )
 
@@ -54,6 +57,15 @@ func init() {
 	}
 }
 
+// 是否未完成初始化
+func IsInitialize() bool {
+	return Config == nil ||
+		Config.AdminUser.User == "" ||
+		Config.AdminUser.Password == "" ||
+		Config.Mysql.Host == "" ||
+		Config.Mysql.User == ""
+}
+
 // 获取配置目录
 func getConfigPath() string {
 	if IsRelease() {
@@ -80,7 +92,6 @@ func InitConfig() *DefaultConfig {
 	c.AdminUser.Password = pwd
 	c.Mysql.Host = "127.0.0.1"
 	c.Mysql.Port = 3306
-	c.Mysql.User = "root"
 	c.Mysql.Database = "gpt_zmide_server"
 	c.OpenAI.Model = "gpt-3.5-turbo"
 	return &c
@@ -138,9 +149,55 @@ func (c *DefaultConfig) GetMysqlUrl() (*url.URL, error) {
 	if c.Mysql.Host == "" || c.Mysql.Port == 0 {
 		return nil, errors.New("database misconfiguration error")
 	}
-	u, err := url.Parse("http://" + c.Mysql.Host + ":" + strconv.Itoa(c.Mysql.Port))
+	return GetMysqlUrl(c.Mysql.Host, c.Mysql.Port)
+}
+
+func GetMysqlUrl(host string, port int) (*url.URL, error) {
+	if host == "" || port == 0 {
+		return nil, errors.New("database misconfiguration error")
+	}
+	u, err := url.Parse("http://" + host + ":" + strconv.Itoa(port))
 	if err != nil {
 		return nil, err
 	}
 	return u, nil
+}
+
+func PingOpenAI(secret_key string, proxy_host string, proxy_port string) (status bool, callback string) {
+	model := Config.OpenAI.Model
+
+	if model != "" && secret_key != "" {
+		client := resty.New()
+		if proxy_host != "" && proxy_port != "" {
+			client.SetProxy("http://" + proxy_host + ":" + proxy_port)
+		}
+		client.SetTimeout(2 * time.Minute)
+		resp, err := client.R().
+			SetHeader("Content-Type", "application/json").
+			SetHeader("Authorization", "Bearer "+secret_key).
+			Get("https://api.openai.com/v1/models")
+		if err == nil && resp.StatusCode() > 190 && resp.StatusCode() < 300 {
+			type Model struct {
+				Id         string        `json:"id"`
+				Object     string        `json:"object"`
+				OwnedBy    string        `json:"owned_by"`
+				Permission []interface{} `json:"permission"`
+			}
+			var data struct {
+				Data []Model `json:"data"`
+			}
+			callback = string(resp.Body())
+			if err := json.Unmarshal(resp.Body(), &data); err == nil {
+				status = true
+				callback = "200"
+			}
+		} else {
+			callback = resp.Status()
+			if err != nil {
+				callback = err.Error()
+			}
+		}
+	}
+
+	return
 }

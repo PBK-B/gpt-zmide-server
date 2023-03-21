@@ -7,14 +7,11 @@ package apis
 
 import (
 	"crypto/md5"
-	"encoding/json"
 	"fmt"
 	"gpt-zmide-server/helper"
 	"gpt-zmide-server/models"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-resty/resty/v2"
 )
 
 type Config struct {
@@ -85,42 +82,11 @@ func (ctl *Config) PingOpenAI(c *gin.Context) {
 	status := false
 	callback := ""
 
-	model := helper.Config.OpenAI.Model
 	secret_key := helper.Config.OpenAI.SecretKey
-	if model != "" && secret_key != "" {
+	if secret_key != "" {
 		proxy_host := helper.Config.OpenAI.HttpProxyHost
 		proxy_port := helper.Config.OpenAI.HttpProxyPort
-
-		client := resty.New()
-		if proxy_host != "" && proxy_port != "" {
-			client.SetProxy("http://" + proxy_host + ":" + proxy_port)
-		}
-		client.SetTimeout(2 * time.Minute)
-		resp, err := client.R().
-			SetHeader("Content-Type", "application/json").
-			SetHeader("Authorization", "Bearer "+secret_key).
-			Get("https://api.openai.com/v1/models")
-		if err == nil && resp.StatusCode() > 190 && resp.StatusCode() < 300 {
-			type Model struct {
-				Id         string        `json:"id"`
-				Object     string        `json:"object"`
-				OwnedBy    string        `json:"owned_by"`
-				Permission []interface{} `json:"permission"`
-			}
-			var data struct {
-				Data []Model `json:"data"`
-			}
-			callback = string(resp.Body())
-			if err := json.Unmarshal(resp.Body(), &data); err == nil {
-				status = true
-				callback = "200"
-			}
-		} else {
-			callback = resp.Status()
-			if err != nil {
-				callback = err.Error()
-			}
-		}
+		status, callback = helper.PingOpenAI(secret_key, proxy_host, proxy_port)
 	}
 
 	ctl.Success(c, gin.H{
