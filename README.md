@@ -5,9 +5,16 @@
 -->
 # gpt-zmide-server 💡
 
+[![GitHub Repo stars](https://img.shields.io/github/stars/pbk-b/gpt-zmide-server?style=social)](https://github.com/PBK-B/gpt-zmide-server)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/pbkbin/zmide-gpt-started?label=Docker%20Image%20Version)
+](https://hub.docker.com/repository/docker/pbkbin/zmide-gpt-started/general)
+
+
 > zmide ChatGPT 应用服务，用于管理应用程序对接和集成 ChatGPT API 的服务应用，提供简单易用的 API 服务。
 
 ## 开始 🎀
+
+### Build Run
 
 1. 创建 `app.conf` 配置文件
 
@@ -16,6 +23,12 @@
 3. 访问 `http://127.0.0.1:8091/install` 开始安装
 
 4. 访问 `http://127.0.0.1:8091/admin` 登录管理后台
+
+### Docker Install
+
+```
+docker push pbkbin/zmide-gpt-started:v1
+```
 
 ## 文档 📜
 
