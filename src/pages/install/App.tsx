@@ -147,6 +147,11 @@ export default function App() {
                         required: true
                     },
                     {
+                        label: 'OpenAI Model',
+                        field: 'openai_model',
+                        required: true
+                    },
+                    {
                         label: 'HTTP 代理地址',
                         field: 'openai_proxy_host',
                         example: '192.168.1.1'
