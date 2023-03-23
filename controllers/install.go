@@ -117,6 +117,7 @@ func (ctl *Install) openaiConfig(data string) error {
 		SecretKey string `json:"openai_secret_key"`
 		ProxyHost string `json:"openai_proxy_host"`
 		ProxyPort string `json:"openai_proxy_port"`
+		Model     string `json:"openai_model"`
 	}
 
 	var config OpenAIConfig
@@ -136,6 +137,7 @@ func (ctl *Install) openaiConfig(data string) error {
 	helper.Config.OpenAI.SecretKey = config.SecretKey
 	helper.Config.OpenAI.HttpProxyHost = config.ProxyHost
 	helper.Config.OpenAI.HttpProxyPort = config.ProxyPort
+	helper.Config.OpenAI.Model = config.Model
 
 	if err := helper.Config.SaveConfig(); err != nil {
 		return err
