@@ -164,14 +164,12 @@ func GetMysqlUrl(host string, port int) (*url.URL, error) {
 }
 
 func PingOpenAI(secret_key string, proxy_host string, proxy_port string) (status bool, callback string) {
-	model := Config.OpenAI.Model
-
-	if model != "" && secret_key != "" {
+	if secret_key != "" {
 		client := resty.New()
 		if proxy_host != "" && proxy_port != "" {
 			client.SetProxy("http://" + proxy_host + ":" + proxy_port)
 		}
-		client.SetTimeout(2 * time.Minute)
+		client.SetTimeout(20 * time.Minute)
 		resp, err := client.R().
 			SetHeader("Content-Type", "application/json").
 			SetHeader("Authorization", "Bearer "+secret_key).
