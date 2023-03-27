@@ -52,3 +52,14 @@ func BasicAuthAdmin() gin.HandlerFunc {
 
 	}
 }
+
+func InstallMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// 如果系统已安装，直接禁止访问安装页面
+		if !helper.IsInitialize() {
+			c.AbortWithStatus(http.StatusNotFound)
+			c.Writer.Write([]byte("404 page not found"))
+			return
+		}
+	}
+}

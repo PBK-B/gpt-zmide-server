@@ -18,8 +18,8 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 	// gin.DisableConsoleColor()
 
 	r.GET("/", new(controllers.Index).Index)
-	r.GET("/install", new(controllers.Install).Index)
-	r.POST("/install/config", new(controllers.Install).Config)
+	r.GET("/install", middleware.InstallMiddleware(), new(controllers.Install).Index)
+	r.POST("/install/config", middleware.InstallMiddleware(), new(controllers.Install).Config)
 
 	r.GET("/admin", middleware.BasicAuth(), new(controllers.Admin).Index)
 	r.GET("/admin/signout", new(controllers.Admin).SignOut)
