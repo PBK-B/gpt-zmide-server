@@ -41,3 +41,13 @@
         align-items: center;
     }
 }
+
+.system_container {
+    .arco-tabs-header-nav-vertical {
+        height: calc(100% - 20px);
+    }
+
+    .arco-tabs-content-vertical {
+        height: calc(100% - 20px);
+    }
+}
