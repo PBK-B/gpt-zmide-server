@@ -10,8 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"gpt-zmide-server/helper"
-
-	"github.com/go-resty/resty/v2"
 )
 
 type Chat struct {
@@ -67,23 +65,19 @@ func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 		return nil, err
 	}
 
-	proxy_host := helper.Config.OpenAI.HttpProxyHost
-	proxy_port := helper.Config.OpenAI.HttpProxyPort
-
-	client := resty.New()
-	if proxy_host != "" && proxy_port != "" {
-		client.SetProxy("http://" + proxy_host + ":" + proxy_port)
+	client, err := helper.Config.GetOpenAIHttpClient()
+	if err != nil {
+		return nil, err
 	}
+
 	resp, err := client.R().
-		SetHeader("Content-Type", "application/json").
-		SetHeader("Authorization", "Bearer "+secret_key).
 		SetBody(`{
 			"model": "` + model + `",
 			"user": "` + helper.Config.SiteName + `",
 			"max_tokens": 1800,
 			"messages": ` + string(msgsStr) + `
 		}`).
-		Post("https://api.openai.com/v1/chat/completions")
+		Post("/v1/chat/completions")
 
 	if err != nil {
 		return nil, err

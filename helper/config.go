@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -45,6 +44,7 @@ type DefaultConfig struct {
 		Model         string `yaml:"model"`
 		HttpProxyHost string `yaml:"http_proxy_host"`
 		HttpProxyPort string `yaml:"http_proxy_port"`
+		BaseUrl       string `yaml:"base_url"`
 	}
 }
 
@@ -94,6 +94,7 @@ func InitConfig() *DefaultConfig {
 	c.Mysql.Port = 3306
 	c.Mysql.Database = "gpt_zmide_server"
 	c.OpenAI.Model = "gpt-3.5-turbo"
+	c.OpenAI.BaseUrl = "https://api.openai.com"
 	return &c
 }
 
@@ -101,7 +102,7 @@ func ReadConfig() (*DefaultConfig, error) {
 	_, err := os.Stat(getConfigPath())
 	if err == nil {
 		// 文件存在，读取配置文件
-		content, err := ioutil.ReadFile(getConfigPath())
+		content, err := os.ReadFile(getConfigPath())
 
 		if err != nil {
 			// 配置文件读取失败
@@ -132,7 +133,7 @@ func LoadConfig(configStr string) (*DefaultConfig, error) {
 // 保存配置文件
 func (c *DefaultConfig) SaveConfig() error {
 	if content, err := yaml.Marshal(c); err == nil {
-		err = ioutil.WriteFile(getConfigPath(), content, 0766)
+		err = os.WriteFile(getConfigPath(), content, 0766)
 		if err != nil {
 			// 写入配置失败
 			return err
@@ -152,6 +153,30 @@ func (c *DefaultConfig) GetMysqlUrl() (*url.URL, error) {
 	return GetMysqlUrl(c.Mysql.Host, c.Mysql.Port)
 }
 
+// 获取 OpenAI API 地址
+func (c *DefaultConfig) GetOpenAIBaseUrl() string {
+	baseURL := "https://api.openai.com"
+	if c.OpenAI.BaseUrl != "" {
+		baseURL = c.OpenAI.BaseUrl
+	}
+	return baseURL
+}
+
+func (c *DefaultConfig) GetOpenAIHttpClient() (*resty.Client, error) {
+	if c.OpenAI.SecretKey == "" {
+		return nil, errors.New("not set OpenAI SecretKey")
+	}
+	client := resty.New()
+	if c.OpenAI.HttpProxyHost != "" && c.OpenAI.HttpProxyPort != "" {
+		client.SetProxy("http://" + c.OpenAI.HttpProxyHost + ":" + c.OpenAI.HttpProxyPort)
+	}
+	client.SetBaseURL(c.GetOpenAIBaseUrl())
+	client.SetTimeout(20 * time.Minute)
+	client.Header.Add("Content-Type", "application/json")
+	client.Header.Add("Authorization", "Bearer "+c.OpenAI.SecretKey)
+	return client, nil
+}
+
 func GetMysqlUrl(host string, port int) (*url.URL, error) {
 	if host == "" || port == 0 {
 		return nil, errors.New("database misconfiguration error")
@@ -165,15 +190,17 @@ func GetMysqlUrl(host string, port int) (*url.URL, error) {
 
 func PingOpenAI(secret_key string, proxy_host string, proxy_port string) (status bool, callback string) {
 	if secret_key != "" {
-		client := resty.New()
-		if proxy_host != "" && proxy_port != "" {
-			client.SetProxy("http://" + proxy_host + ":" + proxy_port)
+		tmpConfig := &DefaultConfig{}
+		tmpConfig.OpenAI.SecretKey = secret_key
+		tmpConfig.OpenAI.HttpProxyHost = proxy_host
+		tmpConfig.OpenAI.HttpProxyPort = proxy_port
+
+		client, err := tmpConfig.GetOpenAIHttpClient()
+		if err != nil {
+			return false, err.Error()
 		}
-		client.SetTimeout(20 * time.Minute)
 		resp, err := client.R().
-			SetHeader("Content-Type", "application/json").
-			SetHeader("Authorization", "Bearer "+secret_key).
-			Get("https://api.openai.com/v1/models")
+			Get("/v1/models")
 		if err == nil && resp.StatusCode() > 190 && resp.StatusCode() < 300 {
 			type Model struct {
 				Id         string        `json:"id"`
