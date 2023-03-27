@@ -24,6 +24,12 @@ type Model struct {
 	UpdatedAt LocalTime `json:"updated_at"`
 }
 
+// API 分页控制器
+type PaginateForm struct {
+	Limit int `form:"page_limit"`
+	Index int `form:"page_index"`
+}
+
 func init() {
 	// 是否初始化安装
 	if !helper.IsInitialize() {
@@ -44,7 +50,7 @@ func InitDB() error {
 	}
 
 	dsn := helper.Config.Mysql.User + ":" + helper.Config.Mysql.Password + "@tcp(" + dbUrl.Host + ")/" + helper.Config.Mysql.Database + "?charset=utf8&parseTime=True&loc=Local"
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{QueryFields: true})
 	if db, _ := DB.DB(); db != nil {
 		db.SetMaxOpenConns(0)
 	}
@@ -69,6 +75,20 @@ func InitDB() error {
 	}
 
 	return nil
+}
+
+func ModelPaginate(value interface{}, form *PaginateForm) (pageForm *PaginateForm, pageOffset int, pageTotal int) {
+	// 计算分页查询偏移
+	pageOffset = (form.Index - 1) * form.Limit
+
+	// 计算分页总数
+	var total int64
+	DB.Model(value).Count(&total)
+	pageTotal = int(total) / form.Limit
+	if int(total)%form.Limit != 0 {
+		pageTotal++
+	}
+	return form, pageOffset, pageTotal
 }
 
 type LocalTime struct {
