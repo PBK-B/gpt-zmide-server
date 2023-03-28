@@ -32,12 +32,36 @@ func (ctl *Chat) Index(c *gin.Context) {
 	// 获取分页数据
 	pageForm, pageOffset, pageTotal := models.ModelPaginate(&chats, pageForm)
 
-	if err := models.DB.Limit(pageForm.Limit).Offset(pageOffset).Preload("Application", func(query *gorm.DB) *gorm.DB {
-		return query.Model(models.Application{})
-	}).Find(&chats).Error; err != nil {
+	err := models.DB.Limit(pageForm.Limit).
+		Offset(pageOffset).
+		Preload("Application",
+			func(query *gorm.DB) *gorm.DB {
+				return query.Model(models.Application{})
+			}).
+		Find(&chats).Error
+	if err != nil {
 		ctl.Fail(c, err.Error())
 		return
 	}
 
-	ctl.SuccessList(c, &chats, pageForm, pageTotal)
+	type ChatItem struct {
+		models.Chat
+		MessagesCount int64 `json:"massages_count"`
+	}
+	chatsList := []ChatItem{}
+	for _, chat := range chats {
+		newChat := &ChatItem{}
+		newChat.ID = chat.ID
+		newChat.AppID = chat.AppID
+		newChat.Remark = chat.Remark
+		newChat.Messages = chat.Messages
+		newChat.Application = chat.Application
+		newChat.CreatedAt = chat.CreatedAt
+		newChat.UpdatedAt = chat.UpdatedAt
+
+		models.DB.Model(&models.Message{}).Where("chat_id = ?", chat.ID).Count(&newChat.MessagesCount)
+		chatsList = append(chatsList, *newChat)
+	}
+
+	ctl.SuccessList(c, chatsList, pageForm, pageTotal)
 }

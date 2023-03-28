@@ -180,7 +180,7 @@ export default function index() {
                 </Button>
             </div>
             {loading || (!error && data?.data) ? (
-                <Table rowKey={(item) => item.id} loading={loading} columns={columns} data={data?.data} />
+                <Table rowKey={(item) => 'app_item_' + item.id} loading={loading} columns={columns} data={data?.data} />
             ) : (
                 <Result
                     status='warning'

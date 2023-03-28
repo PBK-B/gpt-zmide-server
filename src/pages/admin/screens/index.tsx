@@ -6,11 +6,19 @@
 import Home from './home'
 import Application from './application'
 import System from './system'
+import Chat from './chat'
 import EmptyState from './empty'
 
 const HomeScreen = <Home />
 const ApplicationScreen = <Application />
 const EmptyStateScreen = <EmptyState />
 const SystemScreen = <System />
+const ChatScreen = <Chat />
 
-export { HomeScreen, ApplicationScreen, SystemScreen, EmptyStateScreen }
+export {
+    HomeScreen,
+    ApplicationScreen,
+    SystemScreen,
+    ChatScreen,
+    EmptyStateScreen
+}

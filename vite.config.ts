@@ -28,6 +28,7 @@ export default defineConfig({
     ],
     publicDir: "static",
     build: {
+        chunkSizeWarningLimit: 2048,
         copyPublicDir: true,
         rollupOptions: {
             input: {
