@@ -4,7 +4,8 @@
  * @FilePath: /gpt-zmide-server/src/pages/admin/screens/application/index.tsx
  */
 import React from 'react'
-import { Breadcrumb, Button, Input, Message, Modal, Result, Statistic, Table, TableColumnProps, Tag, Form } from '@arco-design/web-react'
+import { Button, Input, Message, Modal, Result, Table, TableColumnProps, Tag, Form, Tooltip } from '@arco-design/web-react'
+import { IconQuestionCircle } from '@arco-design/web-react/icon'
 import useAxios from 'axios-hooks';
 import { axios } from '@/apis';
 
@@ -69,6 +70,18 @@ export default function index() {
                     >
                         修改
                     </Button>
+                    <Button
+                        type='text'
+                        disabled={!item?.id}
+                        onClick={() => {
+                            updateAppStatus(item.id, undefined, item.enable_fix_long_msg)
+                        }}
+                    >
+                        {item?.enable_fix_long_msg === 1 ? '禁用/长消息' : '启用/长消息'}
+                    </Button>
+                    <Tooltip content='OpenAI 接口对 gpt-3.5 消息上下文有 4600 字数限制，启用修复长消息的话，当会话消息字数超过限制会自动忽略旧消息，只发送最新消息内容'>
+                        <IconQuestionCircle />
+                    </Tooltip>
                 </> : undefined
             }
         },
@@ -139,14 +152,19 @@ export default function index() {
     }
 
     // 更新应用状态
-    const updateAppStatus = (id: number, status: number) => {
+    const updateAppStatus = (id: number, status?: number, fix_long_msg?: number) => {
         if (!id || id < 1) {
             Message.warning('应用异常。')
             return
         }
 
         const formData = new FormData();
-        formData.append("status", status === 1 ? '2' : '1')
+        if (status !== undefined) {
+            formData.append("status", status === 1 ? '2' : '1')
+        }
+        if (fix_long_msg != undefined) {
+            formData.append("fix_long_msg", fix_long_msg === 1 ? '2' : '1')
+        }
 
         axios.post(`/api/admin/application/${id}/update`, formData).then((response) => {
             const { code, msg, data } = response.data
