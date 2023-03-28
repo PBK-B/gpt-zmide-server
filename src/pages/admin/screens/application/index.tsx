@@ -26,8 +26,12 @@ export default function index() {
             dataIndex: 'name',
         },
         {
-            title: '密钥',
+            title: '应用KEY',
             dataIndex: 'app_key',
+        },
+        {
+            title: '应用密钥',
+            dataIndex: 'app_secret',
         },
         {
             title: '状态',

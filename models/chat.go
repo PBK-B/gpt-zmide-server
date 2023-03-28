@@ -18,7 +18,8 @@ type Chat struct {
 	Remark      string           `json:"remark"`
 	Messages    []*Message       `gorm:"foreignKey:ChatID" json:"messages"`
 	Application *ChatApplication `gorm:"foreignKey:AppID" json:"app"`
-	Model
+	Model       string           `json:"model"`
+	BaseModel
 }
 
 type ChatApplication struct {
@@ -31,7 +32,7 @@ type ChatApplication struct {
 
 func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 
-	model := helper.Config.OpenAI.Model
+	model := chat.Model
 	secret_key := helper.Config.OpenAI.SecretKey
 	if model == "" || secret_key == "" {
 		return nil, errors.New("OpenAI model 未设置或 secret_key 未设置")
@@ -83,7 +84,6 @@ func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 		SetBody(`{
 			"model": "` + model + `",
 			"user": "` + helper.Config.SiteName + `",
-			"max_tokens": 1800,
 			"messages": ` + string(msgsStr) + `
 		}`).
 		Post("/v1/chat/completions")
@@ -110,7 +110,7 @@ func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 	}
 
 	if len(data.Choices) < 1 {
-		return nil, errors.New("openai api callback choices data error")
+		return nil, errors.New("openai api callback choices data error:" + string(resp.Body()))
 	}
 
 	choiceFirst := data.Choices[0]

@@ -6,3 +6,4 @@
 package helper
 
 const MiddlewareAuthAppKey = "application"
+const PostBodyKey = "post_body_json"

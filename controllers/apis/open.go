@@ -24,6 +24,7 @@ func (ctl *Open) Index(c *gin.Context) {
 
 func (ctl *Open) Query(c *gin.Context) {
 	appTmp := c.MustGet(helper.MiddlewareAuthAppKey)
+	bodyMap := c.GetStringMapString(helper.PostBodyKey)
 
 	if appTmp == nil {
 		ctl.Fail(c, "应用异常")
@@ -37,9 +38,10 @@ func (ctl *Open) Query(c *gin.Context) {
 		return
 	}
 
-	content := c.PostForm("content")
-	p_chat_id := c.PostForm("chat_id")
-	p_remark := c.PostForm("remark")
+	content := c.DefaultPostForm("content", bodyMap["content"])
+	p_chat_id := c.DefaultPostForm("chat_id", bodyMap["chat_id"])
+	p_remark := c.DefaultPostForm("remark", bodyMap["remark"])
+	model := c.DefaultPostForm("model", bodyMap["model"])
 
 	// content 参数为必传
 	if content == "" {
@@ -47,7 +49,14 @@ func (ctl *Open) Query(c *gin.Context) {
 		return
 	}
 
+	// 当 model 不存在时，使用配置的默认 model
+	if model == "" {
+		model = helper.Config.OpenAI.Model
+	}
+
 	chat := &models.Chat{}
+
+	chat.Model = model
 
 	if p_chat_id != "" {
 		if id, err := strconv.Atoi(p_chat_id); err == nil && id != 0 {

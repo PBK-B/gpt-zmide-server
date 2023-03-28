@@ -18,7 +18,7 @@ type Application struct {
 	AppSecret string `gorm:"unique" json:"app_secret"`
 	AppKey    string `gorm:"unique;index" json:"app_key"`
 	Status    uint   `json:"status"`
-	Model
+	BaseModel
 }
 
 // 创建应用

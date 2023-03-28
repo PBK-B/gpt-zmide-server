@@ -19,7 +19,7 @@ import (
 
 var DB *gorm.DB
 
-type Model struct {
+type BaseModel struct {
 	CreatedAt LocalTime `json:"created_at"`
 	UpdatedAt LocalTime `json:"updated_at"`
 }
