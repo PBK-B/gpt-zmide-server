@@ -174,7 +174,7 @@ export default function index() {
             }
             // 成功
             refresh() // 刷新数据 
-            Message.success(`${status === 1 ? '禁用' : '启用'}成功`)
+            Message.success(`配置成功`)
         }).catch(err => {
             Message.info(`请求失败，${err.message || '请稍后重试'}`)
         })

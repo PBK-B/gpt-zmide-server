@@ -49,10 +49,10 @@ func (ctl *Application) Update(c *gin.Context) {
 		return
 	}
 
-	name, p_status, fix_lang_msg := c.PostForm("name"),
+	name, p_status, fix_long_msg := c.PostForm("name"),
 		c.PostForm("status"),
-		c.PostForm("fix_lang_msg")
-	if name == "" && p_status == "" && fix_lang_msg == "" {
+		c.PostForm("fix_long_msg")
+	if name == "" && p_status == "" && fix_long_msg == "" {
 		ctl.Fail(c, "参数异常")
 		return
 	}
@@ -70,10 +70,10 @@ func (ctl *Application) Update(c *gin.Context) {
 		}
 	}
 
-	if fix_lang_msg != "" {
-		fixLangMsg, err := strconv.Atoi(fix_lang_msg)
+	if fix_long_msg != "" {
+		fixLongMsg, err := strconv.Atoi(fix_long_msg)
 		if err == nil {
-			app.EnableFixLongMsg = uint(fixLangMsg)
+			app.EnableFixLongMsg = uint(fixLongMsg)
 		}
 	}
 
