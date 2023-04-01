@@ -26,6 +26,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      - run: yarn && yarn build
       - name: GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
