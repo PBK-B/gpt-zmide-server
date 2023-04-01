@@ -27,7 +27,7 @@
 ### Docker Install
 
 ```
-docker push pbkbin/zmide-gpt-started:v1
+docker pull pbkbin/zmide-gpt-started:v1.1
 ```
 
 ## 文档 📜
