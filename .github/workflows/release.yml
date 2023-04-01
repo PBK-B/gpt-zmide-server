@@ -26,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - run: yarn && yarn build
+      - run: yarn install --frozen-lockfile && yarn build
       - name: GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
