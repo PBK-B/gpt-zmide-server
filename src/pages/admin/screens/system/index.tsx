@@ -96,10 +96,11 @@ export default function index() {
             key: 'openai_config',
             view: (props: FormViewProps) => {
                 const { fromData, setFromData = () => { } } = props;
-                const forms: { label: string, field: string, example?: string, required?: boolean }[] = [
+                const forms: { label: string, field: string, example?: string, required?: boolean, type?: 'password' | 'text' }[] = [
                     {
                         label: 'OpenAI Secret Key',
                         field: 'openai_secret_key',
+                        type: 'password',
                         required: true
                     },
                     {
@@ -123,16 +124,18 @@ export default function index() {
                     {
                         forms.map((item, index) =>
                             <Form.Item key={`${item.field}_form_item_${index}`} label={item.label}>
-                                <Input
-                                    defaultValue={fromData[item.field]}
-                                    placeholder={`请输入你的${item.label}${item.example ? ' ，例如: ' + item.example : ''}`}
-                                    onChange={(value) => {
+                                {React.createElement(Input, {
+                                    defaultValue: fromData[item.field],
+                                    placeholder: `请输入你的${item.label}${item.example ? ' ，例如: ' + item.example : ''}`,
+                                    onChange: (value) => {
                                         const data = {
                                             ...fromData,
                                         }
                                         data[item.field] = value
                                         setFromData(data)
-                                    }} />
+                                    },
+                                    ...item
+                                })}
                             </Form.Item>
                         )
                     }
