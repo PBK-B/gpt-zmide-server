@@ -1,0 +1,19 @@
+{
+  "name": "typescript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js",
+    "build:libs": "cd libs && npm install && npm run build"
+  },
+  "dependencies": {
+    "libs": "^0.1.2",
+    "zmide-gpt-libs": "./libs/"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "ts-node": "^10.9.1"
+  }
+}
