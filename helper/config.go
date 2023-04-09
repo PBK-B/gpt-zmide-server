@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gpt-zmide-server/helper/logger"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -53,7 +54,8 @@ func init() {
 	Config, err = ReadConfig()
 	if err != nil {
 		// 读取配置失败
-		fmt.Println("读取配置文件失败。" + err.Error())
+		logger.Warn("读取配置文件失败。" + err.Error())
+		// fmt.Println("读取配置文件失败。" + err.Error())
 	}
 }
 

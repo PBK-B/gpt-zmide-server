@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"gpt-zmide-server/helper"
+	"gpt-zmide-server/helper/logger"
 	"strings"
 	"time"
 
@@ -34,6 +35,7 @@ func init() {
 	// 是否初始化安装
 	if !helper.IsInitialize() {
 		if err := InitDB(); err != nil {
+			logger.Fatal(err.Error())
 			panic(err.Error())
 		}
 	}
@@ -46,6 +48,9 @@ func InitDB() error {
 
 	dbUrl, err := helper.Config.GetMysqlUrl()
 	if err != nil || dbUrl == nil {
+		if err != nil {
+			logger.Error(err.Error())
+		}
 		return errors.New("the database is not configured, please modify the app.conf file to configure the database")
 	}
 
@@ -56,6 +61,7 @@ func InitDB() error {
 	}
 
 	if err != nil {
+		logger.Error(err.Error())
 		return errors.New("failed to connect database")
 	}
 
@@ -69,7 +75,8 @@ func InitDB() error {
 		)
 
 		if err != nil {
-			fmt.Println(err.Error())
+			// fmt.Println(err.Error())
+			logger.Error(err.Error())
 		}
 
 	}
