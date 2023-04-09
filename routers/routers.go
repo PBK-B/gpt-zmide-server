@@ -55,6 +55,7 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 		adminConfig.GET("/ping/openai", apisCtlConfig.PingOpenAI)
 		adminConfig.GET("/system/config", apisCtlConfig.ConfigInfo)
 		adminConfig.POST("/system/config", apisCtlConfig.ConfigInfoSave)
+		adminConfig.GET("/system/log", apisCtlConfig.GetSystemLogs)
 
 		// 后台管理应用接口
 		adminApp := adminApis.Group("/application")

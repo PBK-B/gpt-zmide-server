@@ -11,8 +11,10 @@ import (
 	"errors"
 	"fmt"
 	"gpt-zmide-server/helper"
+	"gpt-zmide-server/helper/logger"
 	"gpt-zmide-server/models"
 	"net/url"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -139,6 +141,19 @@ func (ctl *Config) ConfigInfoSave(c *gin.Context) {
 	}
 
 	ctl.Success(c, "ok!")
+}
+
+func (ctl *Config) GetSystemLogs(c *gin.Context) {
+	log := ""
+	_, err := os.Stat(logger.LOG_FILE_PATH)
+	if err == nil {
+		// 文件存在，读取配置文件
+		content, err := os.ReadFile(logger.LOG_FILE_PATH)
+		if err == nil {
+			log = string(content)
+		}
+	}
+	ctl.Success(c, log)
 }
 
 // 配置站点

@@ -3,13 +3,29 @@
  * @Date: 2023-03-27
  * @FilePath: /gpt-zmide-server/src/pages/admin/screens/system/index.tsx
  */
-import React, { ReactElement, useEffect } from 'react'
-import { Tabs, Form, Input, Button, Spin, Message } from '@arco-design/web-react';
+import React, { ReactElement, useEffect, useMemo, useRef } from 'react'
 import useAxios from 'axios-hooks';
+
+import { Tabs, Form, Input, Button, Spin, Message } from '@arco-design/web-react';
+
 import { axios } from '@/apis';
+
+import SystemLogs from './Logs';
 
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
+
+type FormViewProps = {
+    fromData?: any,
+    setFromData?: (data: any) => void,
+}
+
+type TabsViewProps = {
+    label: string,
+    key: string,
+    view: ((props: FormViewProps) => JSX.Element) | ReactElement<any, any>,
+    style?: 'form' | 'view'
+}
 
 export default function index() {
 
@@ -20,10 +36,7 @@ export default function index() {
     const [tabsIndex, setTabsIndex] = React.useState(1)
     const [tabsFromData, setTabsFromData] = React.useState<any[]>([])
 
-    type FormViewProps = {
-        fromData?: any,
-        setFromData?: (data: any) => void,
-    }
+
 
     // 获取表单数据
     const tabsFromDataConfig = React.useMemo<any>(() => {
@@ -47,7 +60,7 @@ export default function index() {
         [tabsIndex],
     )
 
-    const tabsView: { label: string, key: string, view: ((props: FormViewProps) => JSX.Element) | ReactElement<any, any> }[] = [
+    const tabsView: TabsViewProps[] = useMemo(() => [
         {
             label: '站点信息配置',
             key: 'site_config',
@@ -142,7 +155,18 @@ export default function index() {
                 </Form>
             }
         },
-    ]
+        {
+            label: '系统日志信息',
+            key: 'system_logs',
+            style: 'view',
+            view: (props: any) => {
+                return <>
+                    <p style={{ marginBottom: 10 }}>系统日志</p>
+                    <SystemLogs {...props} />
+                </>
+            }
+        },
+    ], [])
 
     const selectTabsView = React.useMemo(() => tabsView[tabsIndex].view, [tabsIndex])
 
@@ -248,12 +272,13 @@ export default function index() {
                     <Tabs defaultActiveTab={tabsView[0].key} tabPosition='left' onChange={(key) => {
                         setTabsIndex(tabsView.findIndex((item) => item.key == key))
                     }}>
-                        {tabsView.map((item, index) =>
-                            <TabPane key={item.key} title={item.label}>
-                                {(typeof selectTabsView === "function" ? selectTabsView({
-                                    fromData: { ...tabsFromDataConfig },
-                                    setFromData: setTabsFromDataConfig,
-                                }) : selectTabsView)}
+                        {tabsView.map((item, index) => <TabPane key={item.key} title={item.label}>
+                            {index === tabsIndex && (typeof selectTabsView === "function" ? selectTabsView({
+                                fromData: { ...tabsFromDataConfig },
+                                setFromData: setTabsFromDataConfig,
+                            }) : selectTabsView)}
+
+                            {item.style !== "view" && (
                                 <Button
                                     type="primary"
                                     onClick={() => onClickSubmitConfig(tabsIndex, tabsFromData)}
@@ -262,7 +287,8 @@ export default function index() {
                                 >
                                     保存
                                 </Button>
-                            </TabPane>
+                            )}
+                        </TabPane>
                         )}
                     </Tabs>
                 ) : ""}

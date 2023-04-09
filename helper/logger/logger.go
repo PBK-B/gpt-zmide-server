@@ -14,6 +14,8 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+var LOG_FILE_PATH = "./debug.log"
+
 var (
 	_logger *zap.Logger
 	once    sync.Once
@@ -74,7 +76,7 @@ func getEncoder() zapcore.Encoder {
 
 func getWriteSync() zapcore.WriteSyncer {
 	loggerFileWriter := lumberjack.Logger{
-		Filename:   "./debug.log", // 日志文件路径
+		Filename:   LOG_FILE_PATH, // 日志文件路径
 		MaxSize:    50,            // 每个日志文件保存的最大尺寸 单位：M
 		MaxBackups: 1,             // 日志文件最多保存多少个备份
 		MaxAge:     30,            // 文件最多保存多少天
