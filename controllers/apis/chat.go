@@ -34,7 +34,7 @@ func (ctl *Chat) Index(c *gin.Context) {
 
 	err := models.DB.Limit(pageForm.Limit).
 		Offset(pageOffset).
-		Preload("Application",
+		Preload("App",
 			func(query *gorm.DB) *gorm.DB {
 				return query.Model(models.Application{})
 			}).
@@ -55,7 +55,10 @@ func (ctl *Chat) Index(c *gin.Context) {
 		newChat.AppID = chat.AppID
 		newChat.Remark = chat.Remark
 		newChat.Messages = chat.Messages
-		newChat.Application = chat.Application
+		newChat.ChatApplication = &models.ChatApplication{
+			ID:   chat.App.ID,
+			Name: chat.App.Name,
+		}
 		newChat.CreatedAt = chat.CreatedAt
 		newChat.UpdatedAt = chat.UpdatedAt
 

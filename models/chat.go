@@ -13,21 +13,18 @@ import (
 )
 
 type Chat struct {
-	ID          uint             `gorm:"primaryKey" json:"id"`
-	AppID       uint             `json:"-"`
-	Remark      string           `json:"remark"`
-	Messages    []*Message       `gorm:"foreignKey:ChatID" json:"messages"`
-	Application *ChatApplication `gorm:"foreignKey:AppID" json:"app"`
+	ID              uint             `gorm:"primaryKey" json:"id"`
+	AppID           uint             `json:"-"`
+	Remark          string           `json:"remark"`
+	Messages        []*Message       `gorm:"foreignKey:ChatID" json:"messages"`
+	App             *Application     `json:"-"`
+	ChatApplication *ChatApplication `gorm:"-" json:"app"`
 	Model
 }
 
 type ChatApplication struct {
-	ID               uint   `json:"id"`
-	Name             string `json:"name"`
-	AppSecret        string `json:"-"`
-	AppKey           string `json:"-"`
-	Status           uint   `json:"-"`
-	EnableFixLongMsg uint   `json:"-"`
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
 }
 
 func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
@@ -57,8 +54,8 @@ func (chat *Chat) QueryChatGPT() (msg *Message, err error) {
 		// 避免消息上下文超过 4600 字数限制
 		if contextCount > 4500 {
 			// 判断应用是否需要修复长消息
-			DB.Preload("Application").Find(chat)
-			if chat.Application != nil && chat.Application.EnableFixLongMsg != 1 {
+			DB.Preload("App").Find(chat)
+			if chat.App != nil && chat.App.EnableFixLongMsg != 1 {
 				continue
 			} else {
 				return nil, errors.New("消息上下文超过 4600 字数限制")

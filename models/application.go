@@ -13,12 +13,13 @@ import (
 )
 
 type Application struct {
-	ID               uint   `gorm:"primaryKey" json:"id"`
-	Name             string `gorm:"unique" json:"name"`
-	AppSecret        string `gorm:"unique" json:"app_secret"`
-	AppKey           string `gorm:"unique;index" json:"app_key"`
-	Status           uint   `json:"status"`
-	EnableFixLongMsg uint   `json:"enable_fix_long_msg"`
+	ID               uint    `gorm:"primaryKey" json:"id"`
+	Name             string  `gorm:"unique" json:"name"`
+	AppSecret        string  `gorm:"unique" json:"app_secret,"`
+	AppKey           string  `gorm:"unique;index" json:"app_key"`
+	Status           uint    `json:"status"`
+	EnableFixLongMsg uint    `json:"enable_fix_long_msg"`
+	Chats            []*Chat `gorm:"foreignKey:AppID"`
 	Model
 }
 

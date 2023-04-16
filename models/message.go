@@ -11,5 +11,6 @@ type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 	Raw     string `json:"-"`
+	Chat    *Chat  `json:"chat"`
 	Model
 }

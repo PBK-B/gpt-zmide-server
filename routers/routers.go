@@ -63,7 +63,7 @@ func BuildRouter(r *gin.Engine) *gin.Engine {
 		adminApp.POST("/create", apisCtlApp.Create)
 		adminApp.POST("/:id/update", apisCtlApp.Update)
 
-		// 后台管理应用接口
+		// 后台管理会话接口
 		adminChat := adminApis.Group("/chat")
 		adminChat.GET("/", apisCtlChat.Index)
 	}
