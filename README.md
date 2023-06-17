@@ -56,6 +56,8 @@ API 文档请参考: [docs/README.md](/docs/README.md)
 
 - [ ] 应用单独配置模型
 
+- [ ] SSE 流式接口适配
+
 ## 开发 🔨
 
 ```shell
